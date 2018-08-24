@@ -1,9 +1,34 @@
 from flask import redirect, url_for, render_template, request, session, abort, jsonify
-from app import app, db
+from flask_socketio import join_room, leave_room, send, emit, rooms
+from app import app, db, socketio
 from app.models import BlackCards, WhiteCards, Card, Player, Game
 import time
 import json
 from  sqlalchemy.sql.expression import func
+
+
+@socketio.on('join')
+def on_join(data):
+    nickname = data['nickname']
+    game = data['game']
+    join_room(game)
+    send(nickname + ' has entered the game.', room=game)
+
+
+@socketio.on('leave')
+def on_leave(data):
+    nickname = data['nickname']
+    game = data['game']
+    leave_room(game)
+    send(nickname + ' has left the game.', room=game)
+
+
+@socketio.on('play')
+def ready_state(data):
+    print(data)
+
+    room = rooms()[0]
+    emit('ready', ("data", "abcdefg"), room=room)
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -56,7 +81,7 @@ def game():
             db.session.add(c)
             db.session.commit()
 
-        return render_template( 'game.html', player=player )
+        return render_template( 'game.html', player=player, game=game )
 
 
 @app.route('/play_card')
@@ -67,6 +92,8 @@ def play_card():
     player = Player.query.get(
         session.get('player')
     )
+
+    player.hand[index].playing = True
 
     print(player.hand[index])
 

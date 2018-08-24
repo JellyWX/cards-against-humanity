@@ -9,25 +9,38 @@
     </head>
     <body>
 
-        <div class="card bg-dark text-white" style="width: 18rem;">
-            <div class="card-body">
-                <h5 class="card-title">Dark card title</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        <div class="container text-center mx-auto justify-content-center">
+            <div class="col-mb-4 col-lg-4 col-sm-4 offset-mb-4 offset-lg-4 offset-sm-4">
+                <div class="card bg-dark text-white" style="width: 18rem; height: 16rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">Dark card title</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    </div>
+                </div>
             </div>
         </div>
 
+        <ul class="list-group" style="position: absolute; top: 0; right: 0; width: 18rem;" id="players">
+            {% for player in game.players %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span class="badge badge-warning badge-pill"> </span>
+                    {{ player.nickname }}
+                </li>
+            {% endfor %}
+        </ul>
 
-        <div class="container card-group text-center mx-auto">
 
-            {% for card, index in player.hand|zip(range(player.hand.count())) %}
+        <div class="container card-group text-center mx-auto justify-content-center fixed-bottom center-block">
+
+            {% for card, index in player.hand | zip(range(player.hand.count())) %}
                 <div class="col-mb-3 col-lg-3 col-sm-2">
-                    <div class="card bg-light" style="width: 18rem; height: 18rem;">
+                    <div class="card bg-light" style="width: 18rem; height: 16rem;">
                         <div class="card-body">
                             <br>
                             <h5 class="card-title">{{ card.card.text | safe }}</h5>
                         </div>
-                        <div class="card-body">
-                            <a href="javascript:play({{ index }})" class="card-link">
+                        <div class="card-footer">
+                            <a href="javascript:play({{ index }})" class="card-link" id="play_card_{{ index }}">
                                 {% if card.playing %}
                                 <s>Play Card</s>
                                 {% else %}
@@ -41,14 +54,52 @@
 
         </div> <!-- end of card-deck -->
 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
         <script>
 
-function play(index){
+var sock = io.connect("http://" + document.domain + ':' + location.port);
+
+sock.on('state_change', function(){
+    console.log();
+});
+
+sock.on('user_join', (nickname) => {
+    add_player(nickname)
+});
+
+function add_player(nickname)
+{
+    var player_list = document.getElementById("players");
+
+    var item = document.createElement("li");
+    item.className = "list-group-item d-flex justify-content-between align-items-center";
+
+    var icon = document.createElement("span");
+    icon.className = "badge badge-warning badge-pill";
+
+    var empty_badge = document.createTextNode(" ");
+    icon.appendChild(empty_badge);
+
+    var text = document.createTextNode(nickname);
+
+    item.appendChild(icon);
+    item.appendChild(text);
+
+    player_list.appendChild(item);
+}
+
+function play(index)
+{
+    sock.emit('play', 'ewfewfe')
+
     xhttp = new XMLHttpRequest();
     url = "{{ url_for('play_card') }}"
 
     xhttp.open("GET", url + "?index=" + index, true);
     xhttp.send();
+
+    var link = document.getElementById("play_card_" + index);
+    link.style.setProperty("text-decoration", "line-through");
 }
 
         </script>
