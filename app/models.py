@@ -1,6 +1,7 @@
 from app import db
 
 class BlackCards(db.Model):
+    __tablename__ = 'blackcards'
     __bind_key__ = None
 
     id = db.Column(db.Integer, primary_key=True, unique=True)
@@ -26,6 +27,9 @@ class Card(db.Model):
     hand_id = db.Column(db.Integer, db.ForeignKey('players.id'))
 
     playing = db.Column(db.Boolean, nullable=False, default=False)
+
+    def __repr__():
+        return '<WhiteCard instance "{}">'.format(self.card.text)
 
 
 class Player(db.Model):

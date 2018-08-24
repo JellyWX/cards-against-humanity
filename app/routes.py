@@ -50,8 +50,27 @@ def game():
 
 
     if request.method == 'GET':
+
+        while player.hand.count() < 8:
+            c = Card(card=WhiteCards.query.order_by(func.random()).first(), hand=player)
+            db.session.add(c)
+            db.session.commit()
+
         return render_template( 'game.html', player=player )
 
+
+@app.route('/play_card')
+def play_card():
+
+    index = request.args.get('index')
+
+    player = Player.query.get(
+        session.get('player')
+    )
+
+    print(player.hand[index])
+
+    return '', 200
 
 
 @app.route('/new_player', methods=['GET', 'POST'])

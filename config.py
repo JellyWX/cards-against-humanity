@@ -4,7 +4,7 @@ import configparser
 class Config(object):
     basedir = './'
 
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///../app.db'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///../cards.db'
     SQLALCHEMY_BINDS = {
         'game': 'sqlite://',
     }
