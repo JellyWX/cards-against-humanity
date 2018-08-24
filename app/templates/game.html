@@ -1,0 +1,46 @@
+<html>
+
+    <head>
+
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+        <title>Flasks Against Humanity</title>
+
+    </head>
+    <body>
+
+        <div class="card bg-dark text-white" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">Dark card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            </div>
+        </div>
+
+
+        <div class="container card-group text-center mx-auto">
+
+            {% for card in player.hand %}
+                <div class="col-mb-3 col-lg-3 col-sm-2">
+                    <div class="card bg-light" style="width: 18rem;">
+                        <div class="card-body">
+                            <br>
+                            <h5 class="card-title">{{ card.card_type.text }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <a href="#" class="card-link">
+                                {% if card.playing %}
+                                <s>Play Card</s>
+                                {% else %}
+                                Play Card
+                                {% endif %}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div> <!-- end of card-deck -->
+
+    </body>
+
+</html>
