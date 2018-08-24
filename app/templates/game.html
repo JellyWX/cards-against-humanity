@@ -4,6 +4,14 @@
 
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
+        <style>
+
+.hover-to-front:hover {
+    z-index: 9999;
+}
+
+        </style>
+
         <title>Flasks Against Humanity</title>
 
     </head>
@@ -33,7 +41,7 @@
         <div class="container card-group text-center mx-auto justify-content-center fixed-bottom center-block">
 
             {% for card, index in player.hand | zip(range(player.hand.count())) %}
-                <div class="col-mb-3 col-lg-3 col-sm-2">
+                <div class="col-mb-3 col-lg-3 col-sm-2 hover-to-front">
                     <div class="card bg-light" style="width: 18rem; height: 16rem;">
                         <div class="card-body">
                             <br>
@@ -59,13 +67,27 @@
 
 var sock = io.connect("http://" + document.domain + ':' + location.port);
 
+game_id = {{ game.id }}
+uuid_self = "{{ player.uuid }}"
+
+sock.emit('join', data={'game': game_id})
+
 sock.on('state_change', function(){
     console.log();
 });
 
-sock.on('user_join', (nickname) => {
-    add_player(nickname)
+sock.on('player_join', (nickname, uuid) => {
+    if (uuid != uuid_self)
+    {
+        add_player(nickname)
+    }
 });
+
+players = {}
+
+{% for player in game.players %}
+players["{{ player.uuid }}"] = "{{ player.nickname }}"
+{% endfor %}
 
 function add_player(nickname)
 {
@@ -90,16 +112,24 @@ function add_player(nickname)
 
 function play(index)
 {
-    sock.emit('play', 'ewfewfe')
+    sock.emit('play', index);
 
-    xhttp = new XMLHttpRequest();
-    url = "{{ url_for('play_card') }}"
+    for (
+        var i = 0;
+        i < 9;
+        i++)
+    {
+        var el = document.getElementById("play_card_" + i);
 
-    xhttp.open("GET", url + "?index=" + index, true);
-    xhttp.send();
-
-    var link = document.getElementById("play_card_" + index);
-    link.style.setProperty("text-decoration", "line-through");
+        if (i == index)
+        {
+            el.style.setProperty("text-decoration", "line-through")
+        }
+        else
+        {
+            el.style.setProperty("text-decoration", "")
+        }
+    }
 }
 
         </script>

@@ -37,11 +37,14 @@ class Player(db.Model):
     __tablename__ = 'players'
 
     id = db.Column(db.Integer, primary_key=True, unique=True)
+    uuid = db.Column(db.Text, unique=True)
 
     nickname = db.Column(db.Text, nullable=False)
     hand = db.relationship('Card', backref='hand', lazy='dynamic')
 
     game_id = db.Column(db.Integer, db.ForeignKey('games.id'))
+
+    played = db.Column(db.Boolean, nullable=False, default=False)
 
 
 class Game(db.Model):

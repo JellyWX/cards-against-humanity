@@ -5,30 +5,45 @@ from app.models import BlackCards, WhiteCards, Card, Player, Game
 import time
 import json
 from  sqlalchemy.sql.expression import func
+import uuid
 
 
 @socketio.on('join')
 def on_join(data):
-    nickname = data['nickname']
+    player = Player.query.get(
+        session['player']
+    )
+
+    uuid = player.uuid
+    nickname = player.nickname
+
     game = data['game']
     join_room(game)
-    send(nickname + ' has entered the game.', room=game)
+    emit('player_join', (nickname, uuid), room=game)
 
 
 @socketio.on('leave')
 def on_leave(data):
-    nickname = data['nickname']
+    player = Player.query.get(
+        session['player']
+    )
+
+    uuid = player.uuid
     game = data['game']
     leave_room(game)
-    send(nickname + ' has left the game.', room=game)
+    emit('player_leave', (uuid, ), room=game)
 
 
 @socketio.on('play')
-def ready_state(data):
-    print(data)
+def play(data):
+    player = Player.query.get(
+        session['player']
+    )
+    player.played = True
+    player.hand[data].playing = True
 
     room = rooms()[0]
-    emit('ready', ("data", "abcdefg"), room=room)
+    emit('ready', (player.uuid, ), room=room)
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -84,22 +99,6 @@ def game():
         return render_template( 'game.html', player=player, game=game )
 
 
-@app.route('/play_card')
-def play_card():
-
-    index = int( request.args.get('index') )
-
-    player = Player.query.get(
-        session.get('player')
-    )
-
-    player.hand[index].playing = True
-
-    print(player.hand[index])
-
-    return '', 200
-
-
 @app.route('/new_player', methods=['GET', 'POST'])
 def new_player():
 
@@ -119,7 +118,7 @@ def new_player():
             return render_template('new_player.html', errors=['Please enter a nickname'])
 
 
-        p = Player(nickname=request.form.get('nickname'), game=game)
+        p = Player(nickname=request.form.get('nickname'), game=game, uuid=uuid.uuid4().hex)
 
         db.session.add(p)
         db.session.commit()
