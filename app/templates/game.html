@@ -34,17 +34,23 @@
                 </li>
             {% endfor %}
         </ul>
+        <br>
 
-        <div class="d-flex justify-content-center text-center pull-bottom" style="overflow-x: scroll;">
-            <div class="hover-to-front">
-                <div class="card bg-light" style="width: 12rem; height: 16rem;">
-                    <div class="card-body">
-                        <br>
-                        <h5 class="card-title">Test</h5>
-                    </div>
+        <div class="d-flex justify-content-center text-center" style="overflow-x: scroll;" id="results">
+        <!--
+            <div class="card bg-light" style="width: 14rem; height: 16rem;">
+                <div class="card-body">
+                    <br>
+                    <h5 class="card-title">Test</h5>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="card-link">
+                        Choose
+                    </a>
                 </div>
             </div>
         </div>
+        -->
 
         <div class="d-flex justify-content-between fixed-bottom text-center" style="overflow-x: scroll;">
 
@@ -118,7 +124,14 @@ sock.on('player_join', (nickname, uuid) =>
 
 sock.on('show_cards', (data) =>
 {
-    console.log(data);
+    cards = data.split(";")
+    for (var i = 0; i < cards.length; i++)
+    {
+        if (cards[i] != "")
+        {
+            create_show_card(cards[i], true)
+        }
+    }
 });
 
 
@@ -168,6 +181,46 @@ function play(index)
             el.parentNode.parentNode.style.opacity = 1;
         }
     }
+}
+
+function create_show_card(text, czar)
+{
+    if (czar)
+    {
+        var choose = document.createTextNode("Choose");
+
+        var link = document.createElement("a");
+        link.href = "#";
+        link.className = "card-link";
+        link.appendChild(choose);
+
+        var footer = document.createElement("div");
+        footer.className = "card-footer";
+        footer.appendChild(link);
+    }
+
+    var content = document.createElement("h5");
+    content.className = "card-title"
+    content.innerHTML = text;
+
+    var br = document.createElement("br");
+
+    var body = document.createElement("div");
+    body.className = "card-body"
+    body.appendChild(br);
+    body.appendChild(content);
+
+    var card = document.createElement("div");
+    card.className = "card bg-light";
+    card.style.width = "14rem";
+    card.style.height = "16rem";
+    card.appendChild(body);
+    if (czar)
+    {
+        card.appendChild(footer);
+    }
+
+    document.getElementById("results").appendChild(card);
 }
 
         </script>
