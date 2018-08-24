@@ -14,12 +14,15 @@ def on_join():
         session['player']
     )
 
+    player.sid = request.sid
     uuid = player.uuid
     nickname = player.nickname
 
     game = player.game.id
     join_room(game)
     emit('player_join', (nickname, uuid), room=game)
+
+    db.session.commit()
 
 
 @socketio.on('leave')
@@ -54,13 +57,28 @@ def play(data):
 
     if all([player.ready for player in game.players]):
         text = ''
-        for player in game.players.order_by(func.random()):
-            card = player.hand.filter(Card.playing).first()
-            text += card.card.text + ';'
+        for p in game.players.order_by(func.random()):
+            if not p.czar:
+                card_q = p.hand.filter(Card.playing)
+                card = card_q.first()
+
+                text += card.card.text + '\t'
+
+                card_q.delete(synchronize_session='fetch')
+
+                c = Card(card=WhiteCards.query.order_by(func.random()).first(), hand=p)
+                db.session.add(c)
+
+                hand = ''
+                for card in p.hand:
+                    hand += card.card.text + '\t'
+
+                emit('new_hand', (hand, ), room=p.sid)
 
         emit('show_cards', (text, ), room=room)
 
     db.session.commit()
+
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])

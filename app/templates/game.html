@@ -56,21 +56,19 @@
         <div class="d-flex justify-content-between fixed-bottom text-center" style="overflow-x: scroll;">
 
             {% for card, index in player.hand | zip(range(player.hand.count())) %}
-                <div class="hover-to-front">
-                    <div class="card bg-light" style="width: 14rem; height: 16rem;">
-                        <div class="card-body">
-                            <br>
-                            <h5 class="card-title">{{ card.card.text | safe }}</h5>
-                        </div>
-                        <div class="card-footer">
-                            <a href="javascript:play({{ index }})" class="card-link" id="play_card_{{ index }}">
-                                {% if card.playing %}
-                                <s>Play Card</s>
-                                {% else %}
-                                Play Card
-                                {% endif %}
-                            </a>
-                        </div>
+                <div class="card bg-light" style="width: 14rem; height: 16rem;">
+                    <div class="card-body">
+                        <br>
+                        <h5 class="card-title" id="content_{{ index }}">{{ card.card.text | safe }}</h5>
+                    </div>
+                    <div class="card-footer">
+                        <a href="javascript:play({{ index }})" class="card-link" id="play_card_{{ index }}">
+                            {% if card.playing %}
+                            <s>Play Card</s>
+                            {% else %}
+                            Play Card
+                            {% endif %}
+                        </a>
                     </div>
                 </div>
             {% endfor %}
@@ -101,7 +99,6 @@ sock.on('ready', (uuid) =>
 
     user_item.getElementsByTagName('span')[0].className = "badge badge-success badge-pill";
 
-
 });
 
 sock.on('unready', function()
@@ -123,9 +120,21 @@ sock.on('player_join', (nickname, uuid) =>
     }
 });
 
+sock.on('new_hand', (data) =>
+{
+    cards = data.split("\t");
+    console.log(cards);
+
+
+    for (var i = 0; i < 8; i++)
+    {
+        document.getElementById("content_" + i).innerHTML = cards[i];
+    }
+});
+
 sock.on('show_cards', (data) =>
 {
-    cards = data.split(";")
+    cards = data.split("\t")
     for (var i = 0; i < cards.length; i++)
     {
         if (cards[i] != "")
@@ -216,6 +225,7 @@ function create_show_card(text, czar)
     card.style.width = "14rem";
     card.style.height = "16rem";
     card.appendChild(body);
+
     if (czar)
     {
         card.appendChild(footer);

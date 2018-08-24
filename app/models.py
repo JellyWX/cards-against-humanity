@@ -38,6 +38,7 @@ class Player(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, unique=True)
     uuid = db.Column(db.Text, unique=True)
+    sid = db.Column(db.Text, unique=True)
 
     nickname = db.Column(db.Text, nullable=False)
     hand = db.relationship('Card', backref='hand', lazy='dynamic')
@@ -45,6 +46,7 @@ class Player(db.Model):
     game_id = db.Column(db.Integer, db.ForeignKey('games.id'))
 
     ready = db.Column(db.Boolean, nullable=False, default=False)
+    czar = db.Column(db.Boolean, nullable=False, default=False)
 
 
 class Game(db.Model):
