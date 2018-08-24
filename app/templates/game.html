@@ -78,15 +78,29 @@ players["{{ player.uuid }}"] = "{{ player.nickname }}"
 
 sock.emit('join', data={'game': game_id})
 
-sock.on('state_change', function(){
-    console.log();
+sock.on('ready', function(uuid)
+{
+    console.log("player " + uuid + " has readied up");
+    var user_item = document.getElementById(uuid);
+
+    user_item.getElementsByTagName('span')[0].className = "badge badge-success badge-pill";
+});
+
+sock.on('unready', function()
+{
+    var player_list = document.getElementById("players");
+
+    for (element in player_list.children)
+    {
+        element.getElementsByTagName('span').className = "badge badge-warning badge-pill";
+    }
 });
 
 sock.on('player_join', (nickname, uuid) => {
     if (uuid != uuid_self)
     {
         add_player(nickname, uuid);
-        players[uuid] = nickname
+        players[uuid] = nickname;
     }
 });
 
@@ -119,7 +133,7 @@ function play(index)
 
     for (
         var i = 0;
-        i < 9;
+        i < 8;
         i++)
     {
         var el = document.getElementById("play_card_" + i);

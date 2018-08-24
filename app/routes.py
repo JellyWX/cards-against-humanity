@@ -43,6 +43,7 @@ def play(data):
     player.hand[data].playing = True
 
     room = rooms()[0]
+    print('{} card has been played by {}'.format(player.hand[data], player.nickname))
     emit('ready', (player.uuid, ), room=room)
 
 
