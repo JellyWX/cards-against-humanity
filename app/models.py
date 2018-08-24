@@ -44,7 +44,7 @@ class Player(db.Model):
 
     game_id = db.Column(db.Integer, db.ForeignKey('games.id'))
 
-    played = db.Column(db.Boolean, nullable=False, default=False)
+    ready = db.Column(db.Boolean, nullable=False, default=False)
 
 
 class Game(db.Model):

@@ -9,7 +9,7 @@ import uuid
 
 
 @socketio.on('join')
-def on_join(data):
+def on_join():
     player = Player.query.get(
         session['player']
     )
@@ -17,19 +17,19 @@ def on_join(data):
     uuid = player.uuid
     nickname = player.nickname
 
-    game = data['game']
+    game = player.game.id
     join_room(game)
     emit('player_join', (nickname, uuid), room=game)
 
 
 @socketio.on('leave')
-def on_leave(data):
+def on_leave():
     player = Player.query.get(
         session['player']
     )
 
     uuid = player.uuid
-    game = data['game']
+    game = player.game.id
     leave_room(game)
     emit('player_leave', (uuid, ), room=game)
 
@@ -39,13 +39,28 @@ def play(data):
     player = Player.query.get(
         session['player']
     )
-    player.played = True
+
+    current = player.hand.filter(Card.playing).first()
+    if current is not None:
+        current.playing = False
+
+    player.ready = True
     player.hand[data].playing = True
 
     room = rooms()[0]
     print('{} card has been played by {}'.format(player.hand[data], player.nickname))
     emit('ready', (player.uuid, ), room=room)
+    game = Game.query.get(player.game.id)
 
+    if all([player.ready for player in game.players]):
+        text = ''
+        for player in game.players.order_by(func.random()):
+            card = player.hand.filter(Card.playing).first()
+            text += card.card.text + ';'
+
+        emit('show_cards', (text, ), room=room)
+
+    db.session.commit()
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])

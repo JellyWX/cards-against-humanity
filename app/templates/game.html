@@ -38,11 +38,11 @@
         </ul>
 
 
-        <div class="container card-group text-center mx-auto justify-content-center fixed-bottom center-block">
+        <div class="d-flex justify-content-between fixed-bottom text-center" style="overflow-x: scroll;">
 
             {% for card, index in player.hand | zip(range(player.hand.count())) %}
-                <div class="col-mb-3 col-lg-3 col-sm-2 hover-to-front">
-                    <div class="card bg-light" style="width: 18rem; height: 16rem;">
+                <div class="hover-to-front">
+                    <div class="card bg-light" style="width: 14rem; height: 16rem;">
                         <div class="card-body">
                             <br>
                             <h5 class="card-title">{{ card.card.text | safe }}</h5>
@@ -66,6 +66,8 @@
         <script>
 
 var sock = io.connect("http://" + document.domain + ':' + location.port);
+sock.emit('join');
+
 
 game_id = {{ game.id }}
 uuid_self = "{{ player.uuid }}"
@@ -76,9 +78,8 @@ players = {}
 players["{{ player.uuid }}"] = "{{ player.nickname }}"
 {% endfor %}
 
-sock.emit('join', data={'game': game_id})
 
-sock.on('ready', function(uuid)
+sock.on('ready', (uuid) =>
 {
     console.log("player " + uuid + " has readied up");
     var user_item = document.getElementById(uuid);
@@ -96,12 +97,18 @@ sock.on('unready', function()
     }
 });
 
-sock.on('player_join', (nickname, uuid) => {
+sock.on('player_join', (nickname, uuid) =>
+{
     if (uuid != uuid_self)
     {
         add_player(nickname, uuid);
         players[uuid] = nickname;
     }
+});
+
+sock.on('show_cards', (data) =>
+{
+    console.log(data);
 });
 
 
