@@ -3,6 +3,7 @@ from app import app, db
 from app.models import BlackCards, WhiteCards, Card, Player, Game
 import time
 import json
+from  sqlalchemy.sql.expression import func
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -39,14 +40,18 @@ def game():
 
         return redirect( url_for('index') )
 
+    player = Player.query.get(
+        session.get('player')
+    )
+
+    if player is None:
+
+        return redirect( url_for('new_player', game=game.id) )
+
 
     if request.method == 'GET':
+        return render_template( 'game.html', player=player )
 
-        if session.get('player') is None:
-            return redirect( url_for( 'new_player', game=request.args.get('id') ) )
-
-        else:
-            return render_template( 'game.html', player=Player.query.get(session.get('player')) )
 
 
 @app.route('/new_player', methods=['GET', 'POST'])
