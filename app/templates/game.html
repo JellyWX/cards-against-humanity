@@ -17,13 +17,11 @@
     </head>
     <body>
 
-        <div class="container text-center mx-auto justify-content-center">
-            <div class="col-mb-4 col-lg-4 col-sm-4 offset-mb-4 offset-lg-4 offset-sm-4">
-                <div class="card bg-dark text-white" style="width: 18rem; height: 16rem;">
-                    <div class="card-body">
-                        <h5 class="card-title">Dark card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    </div>
+        <div class="container text-center d-flex justify-content-center">
+            <div class="card bg-dark text-white" style="width: 18rem; height: 16rem;">
+                <div class="card-body">
+                    <h5 class="card-title">Dark card title</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
                 </div>
             </div>
         </div>
@@ -37,6 +35,16 @@
             {% endfor %}
         </ul>
 
+        <div class="d-flex justify-content-center text-center pull-bottom" style="overflow-x: scroll;">
+            <div class="hover-to-front">
+                <div class="card bg-light" style="width: 12rem; height: 16rem;">
+                    <div class="card-body">
+                        <br>
+                        <h5 class="card-title">Test</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="d-flex justify-content-between fixed-bottom text-center" style="overflow-x: scroll;">
 
@@ -85,6 +93,8 @@ sock.on('ready', (uuid) =>
     var user_item = document.getElementById(uuid);
 
     user_item.getElementsByTagName('span')[0].className = "badge badge-success badge-pill";
+
+
 });
 
 sock.on('unready', function()
@@ -147,11 +157,15 @@ function play(index)
 
         if (i == index)
         {
-            el.style.setProperty("text-decoration", "line-through")
+            el.style.setProperty("text-decoration", "line-through");
+            el.style.setProperty("pointer-events", "none");
+            el.parentNode.parentNode.style.opacity = 0.2;
         }
         else
         {
-            el.style.setProperty("text-decoration", "")
+            el.style.setProperty("text-decoration", "");
+            el.style.setProperty("pointer-events", "auto");
+            el.parentNode.parentNode.style.opacity = 1;
         }
     }
 }
