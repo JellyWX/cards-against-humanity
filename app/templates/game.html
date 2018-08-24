@@ -30,7 +30,7 @@
 
         <ul class="list-group" style="position: absolute; top: 0; right: 0; width: 18rem;" id="players">
             {% for player in game.players %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
+                <li class="list-group-item d-flex justify-content-between align-items-center" id="{{ player.uuid }}">
                     <span class="badge badge-warning badge-pill"> </span>
                     {{ player.nickname }}
                 </li>
@@ -70,6 +70,12 @@ var sock = io.connect("http://" + document.domain + ':' + location.port);
 game_id = {{ game.id }}
 uuid_self = "{{ player.uuid }}"
 
+players = {}
+
+{% for player in game.players %}
+players["{{ player.uuid }}"] = "{{ player.nickname }}"
+{% endfor %}
+
 sock.emit('join', data={'game': game_id})
 
 sock.on('state_change', function(){
@@ -79,22 +85,19 @@ sock.on('state_change', function(){
 sock.on('player_join', (nickname, uuid) => {
     if (uuid != uuid_self)
     {
-        add_player(nickname)
+        add_player(nickname, uuid);
+        players[uuid] = nickname
     }
 });
 
-players = {}
 
-{% for player in game.players %}
-players["{{ player.uuid }}"] = "{{ player.nickname }}"
-{% endfor %}
-
-function add_player(nickname)
+function add_player(nickname, uuid)
 {
     var player_list = document.getElementById("players");
 
     var item = document.createElement("li");
     item.className = "list-group-item d-flex justify-content-between align-items-center";
+    item.id = uuid;
 
     var icon = document.createElement("span");
     icon.className = "badge badge-warning badge-pill";
