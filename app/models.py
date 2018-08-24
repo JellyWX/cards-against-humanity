@@ -28,7 +28,7 @@ class Card(db.Model):
 
     playing = db.Column(db.Boolean, nullable=False, default=False)
 
-    def __repr__():
+    def __repr__(self):
         return '<WhiteCard instance "{}">'.format(self.card.text)
 
 

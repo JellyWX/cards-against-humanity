@@ -62,7 +62,7 @@ def game():
 @app.route('/play_card')
 def play_card():
 
-    index = request.args.get('index')
+    index = int( request.args.get('index') )
 
     player = Player.query.get(
         session.get('player')
