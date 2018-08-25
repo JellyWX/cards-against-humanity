@@ -28,12 +28,12 @@ def on_join():
             is_czar = True
 
         if p.uuid != player.uuid:
-            emit('player_join', (p.nickname, p.uuid, p.czar), room=player.sid)
+            emit('player_join', (p.nickname, p.uuid, p.czar, p.points), room=player.sid)
 
     if not is_czar:
         player.czar = True
 
-    emit('player_join', (nickname, uuid, player.czar), room=game)
+    emit('player_join', (nickname, uuid, player.czar, player.points), room=game)
 
     db.session.commit()
 

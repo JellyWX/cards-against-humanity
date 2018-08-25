@@ -103,11 +103,11 @@ sock.on('unready', function()
     }
 });
 
-sock.on('player_join', (nickname, uuid, czar) =>
+sock.on('player_join', (nickname, uuid, czar, points) =>
 {
     if (!(uuid in players))
     {
-        add_player(nickname, uuid, czar);
+        add_player(nickname, uuid, czar, points);
         players[uuid] = nickname;
 
         if (uuid == uuid_self)
@@ -154,7 +154,7 @@ sock.on('round_win', (data) =>
 
 });
 
-function add_player(nickname, uuid, czar)
+function add_player(nickname, uuid, czar, points)
 {
     var player_list = document.getElementById("players");
 
@@ -173,7 +173,7 @@ function add_player(nickname, uuid, czar)
         icon.className = "badge badge-warning badge-pill";
     }
 
-    var empty_badge = document.createTextNode(" ");
+    var empty_badge = document.createTextNode(points);
     icon.appendChild(empty_badge);
 
     if (czar)
