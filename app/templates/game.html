@@ -27,12 +27,12 @@
         </div>
 
         <ul class="list-group" style="position: absolute; top: 0; right: 0; width: 18rem;" id="players">
-            {% for player in game.players %}
+            <!--
                 <li class="list-group-item d-flex justify-content-between align-items-center" id="{{ player.uuid }}">
                     <span class="badge badge-warning badge-pill"> </span>
                     {{ player.nickname }}
                 </li>
-            {% endfor %}
+            -->
         </ul>
         <br>
 
@@ -63,11 +63,7 @@
                     </div>
                     <div class="card-footer">
                         <a href="javascript:play({{ index }})" class="card-link" id="play_card_{{ index }}">
-                            {% if card.playing %}
-                            <s>Play Card</s>
-                            {% else %}
                             Play Card
-                            {% endif %}
                         </a>
                     </div>
                 </div>
@@ -82,14 +78,11 @@ var sock = io.connect("http://" + document.domain + ':' + location.port);
 sock.emit('join');
 
 
-game_id = {{ game.id }}
-uuid_self = "{{ player.uuid }}"
+var game_id = {{ game.id }};
+var uuid_self = "{{ player.uuid }}";
+var am_czar = false;
 
-players = {}
-
-{% for player in game.players %}
-players["{{ player.uuid }}"] = "{{ player.nickname }}"
-{% endfor %}
+var players = {}
 
 
 sock.on('ready', (uuid) =>
@@ -111,12 +104,22 @@ sock.on('unready', function()
     }
 });
 
-sock.on('player_join', (nickname, uuid) =>
+sock.on('player_join', (nickname, uuid, czar) =>
 {
-    if (uuid != uuid_self)
+    if (!(uuid in players))
     {
-        add_player(nickname, uuid);
+        add_player(nickname, uuid, czar);
         players[uuid] = nickname;
+
+        if (uuid == uuid_self)
+        {
+            am_czar = czar;
+
+            if (czar)
+            {
+                
+            }
+        }
     }
 });
 
@@ -139,13 +142,17 @@ sock.on('show_cards', (data) =>
     {
         if (cards[i] != "")
         {
-            create_show_card(cards[i], true)
+            create_show_card(cards[i], am_czar)
         }
     }
 });
 
+sock.on('round_win', (data) =>
+{
 
-function add_player(nickname, uuid)
+});
+
+function add_player(nickname, uuid, czar)
 {
     var player_list = document.getElementById("players");
 
@@ -154,7 +161,15 @@ function add_player(nickname, uuid)
     item.id = uuid;
 
     var icon = document.createElement("span");
-    icon.className = "badge badge-warning badge-pill";
+
+    if (czar)
+    {
+        icon.className = "badge badge-info badge-pill";
+    }
+    else
+    {
+        icon.className = "badge badge-warning badge-pill";
+    }
 
     var empty_badge = document.createTextNode(" ");
     icon.appendChild(empty_badge);
@@ -169,26 +184,29 @@ function add_player(nickname, uuid)
 
 function play(index)
 {
-    sock.emit('play', index);
-
-    for (
-        var i = 0;
-        i < 8;
-        i++)
+    if (!am_czar)
     {
-        var el = document.getElementById("play_card_" + i);
+        sock.emit('play', index);
 
-        if (i == index)
+        for (
+            var i = 0;
+            i < 8;
+            i++)
         {
-            el.style.setProperty("text-decoration", "line-through");
-            el.style.setProperty("pointer-events", "none");
-            el.parentNode.parentNode.style.opacity = 0.2;
-        }
-        else
-        {
-            el.style.setProperty("text-decoration", "");
-            el.style.setProperty("pointer-events", "auto");
-            el.parentNode.parentNode.style.opacity = 1;
+            var el = document.getElementById("play_card_" + i);
+
+            if (i == index)
+            {
+                el.style.setProperty("text-decoration", "line-through");
+                el.style.setProperty("pointer-events", "none");
+                el.parentNode.parentNode.style.opacity = 0.2;
+            }
+            else
+            {
+                el.style.setProperty("text-decoration", "");
+                el.style.setProperty("pointer-events", "auto");
+                el.parentNode.parentNode.style.opacity = 1;
+            }
         }
     }
 }
@@ -200,7 +218,7 @@ function create_show_card(text, czar)
         var choose = document.createTextNode("Choose");
 
         var link = document.createElement("a");
-        link.href = "#";
+        link.href = "javascript:czar_select(" + text + ")";
         link.className = "card-link";
         link.appendChild(choose);
 

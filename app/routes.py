@@ -20,7 +20,20 @@ def on_join():
 
     game = player.game.id
     join_room(game)
-    emit('player_join', (nickname, uuid), room=game)
+
+    is_czar = False
+
+    for p in player.game.players:
+        if p.czar:
+            is_czar = True
+
+        if p.uuid != player.uuid:
+            emit('player_join', (p.nickname, p.uuid, p.czar), room=player.sid)
+
+    if not is_czar:
+        player.czar = True
+
+    emit('player_join', (nickname, uuid, player.czar), room=game)
 
     db.session.commit()
 
@@ -52,10 +65,13 @@ def play(data):
 
     room = rooms()[0]
     print('{} card has been played by {}'.format(player.hand[data], player.nickname))
+
     emit('ready', (player.uuid, ), room=room)
     game = Game.query.get(player.game.id)
 
-    if all([player.ready for player in game.players]):
+    if all([player.ready for player in game.players if not player.czar]):
+        game.stage = 'czar'
+
         text = ''
         for p in game.players.order_by(func.random()):
             if not p.czar:
@@ -66,16 +82,28 @@ def play(data):
 
                 card_q.delete(synchronize_session='fetch')
 
-                c = Card(card=WhiteCards.query.order_by(func.random()).first(), hand=p)
-                db.session.add(c)
-
-                hand = ''
-                for card in p.hand:
-                    hand += card.card.text + '\t'
-
-                emit('new_hand', (hand, ), room=p.sid)
-
         emit('show_cards', (text, ), room=room)
+
+    db.session.commit()
+
+
+@socketio.on('czar_select')
+def czar_select(text):
+    player = Player.query.get(
+        session['player']
+    )
+
+    if player.czar:
+        for p in game.players.order_by(func.random()):
+            if not p.uuid == player.uuid:
+                card_text = p.hand.filter(Card.playing).first().card.text
+
+                if card_text == text:
+                    p.points += 1
+                    emit('round_win', (p.uuid, ), room=player.game.id)
+                    p.game.stage = 'waiting'
+
+                    break
 
     db.session.commit()
 
@@ -149,8 +177,12 @@ def new_player():
 
         if request.form.get('nickname') == '':
 
-            return render_template('new_player.html', errors=['Please enter a nickname'])
+            return render_template('new_player.html', errors=['You must enter a nickname'], password=game.password is not None)
 
+        if game.password is not None:
+            if request.form.get('password') != game.password:
+
+                return render_template('new_player.html', errors=['Password is incorrect'], password=True)
 
         p = Player(nickname=request.form.get('nickname'), game=game, uuid=uuid.uuid4().hex)
 
@@ -163,4 +195,4 @@ def new_player():
 
     elif request.method == 'GET':
 
-        return render_template('new_player.html', errors=[])
+        return render_template('new_player.html', errors=[], password=game.password is not None)

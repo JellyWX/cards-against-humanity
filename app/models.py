@@ -41,6 +41,7 @@ class Player(db.Model):
     sid = db.Column(db.Text, unique=True)
 
     nickname = db.Column(db.Text, nullable=False)
+    points = db.Column(db.Integer, nullable=False, default=0)
     hand = db.relationship('Card', backref='hand', lazy='dynamic')
 
     game_id = db.Column(db.Integer, db.ForeignKey('games.id'))
@@ -57,3 +58,5 @@ class Game(db.Model):
 
     players = db.relationship('Player', backref='game', lazy='dynamic')
     password = db.Column(db.Text, nullable=True)
+
+    stage = db.Column(db.Text, nullable=False, default='waiting')

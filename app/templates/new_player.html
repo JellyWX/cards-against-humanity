@@ -18,7 +18,12 @@
             <p>Please enter a nickname</p>
             <input type="text" name="nickname"></input>
 
-            <input type="submit">Go!</input>
+            {% if password %}
+            <p>Please enter the game password</p>
+            <input type="password" name="password"></input>
+            {% endif %}
+
+            <input type="submit" value="Go!"></input>
 
         </form>
 
