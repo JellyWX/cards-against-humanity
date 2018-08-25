@@ -20,7 +20,7 @@
         <div class="container text-center d-flex justify-content-center">
             <div class="card bg-dark text-white" style="width: 18rem; height: 16rem;">
                 <div class="card-body">
-                    <h4 class="card-title">{{ game.card.text | safe }}</h4>
+                    <h4 class="card-title" id="blackcard">{{ game.card.text | safe }}</h4>
                 </div>
             </div>
         </div>
@@ -52,7 +52,7 @@
         -->
         </div>
 
-        <div class="d-flex justify-content-between fixed-bottom text-center" style="overflow-x: scroll;">
+        <div class="d-flex justify-content-between fixed-bottom text-center" style="overflow-x: scroll;" id="deck">
 
             {% for card, index in player.hand | zip(range(player.hand.count())) %}
                 <div class="card bg-light" style="width: 14rem; height: 16rem;">
@@ -125,20 +125,10 @@ sock.on('player_join', (nickname, uuid, czar, points) =>
     }
 });
 
-sock.on('new_hand', (data) =>
-{
-    cards = data.split("\t");
-    console.log(cards);
-
-
-    for (var i = 0; i < 8; i++)
-    {
-        document.getElementById("content_" + i).innerHTML = cards[i];
-    }
-});
-
 sock.on('show_cards', (data) =>
 {
+    console.log("received show_cards event");
+
     cards = data.split("\t")
     for (var i = 0; i < cards.length; i++)
     {
@@ -151,9 +141,40 @@ sock.on('show_cards', (data) =>
 
 sock.on('round_win', (data) =>
 {
-    alert(data + " has won the round");
+    console.log(players[data] + " has won the round");
+});
 
-    window.setTimeout(location.reload(true), 8000);
+sock.on('refresh', (cards, new_czar, new_black, points) =>
+{
+    console.log("refresh called")
+
+    drop("players");
+    drop("results");
+    drop("deck");
+
+    for (var uuid in points)
+    {
+        add_player(players[uuid], uuid, new_czar == uuid, points[uuid]);
+    }
+
+    hand = cards.split("\t");
+
+    for (var i = 0; i < hand.length; i++)
+    {
+        create_hand_card(hand[i], i);
+    }
+
+    am_czar = (new_czar == uuid_self)
+
+    if (am_czar)
+    {
+        for (var i = 0; i < 8; i++)
+        {
+            document.getElementsByClassName("play-button")[i].style.opacity = 0
+        }
+    }
+
+    document.getElementById("blackcard").innerHTML = new_black;
 });
 
 function add_player(nickname, uuid, czar, points)
@@ -191,6 +212,15 @@ function add_player(nickname, uuid, czar, points)
     item.appendChild(text);
 
     player_list.appendChild(item);
+}
+
+function drop(element)
+{
+    var list = document.getElementById(element);
+    while (list.firstChild)
+    {
+        list.removeChild(list.firstChild);
+    }
 }
 
 function play(index)
@@ -261,6 +291,43 @@ function create_show_card(text, czar)
     }
 
     document.getElementById("results").appendChild(card);
+}
+
+function create_hand_card(text, index)
+{
+    var choose = document.createTextNode("Play Card");
+
+    var link = document.createElement("a");
+    link.href = "javascript:play(" + index + ")";
+    link.className = "card-link";
+    link.id = "play_card_" + index
+    link.appendChild(choose);
+
+    var footer = document.createElement("div");
+    footer.className = "card-footer play-button";
+    footer.appendChild(link);
+
+    var content = document.createElement("h5");
+    content.className = "card-title"
+    content.innerHTML = text;
+    content.id = "content_" + index
+
+    var br = document.createElement("br");
+
+    var body = document.createElement("div");
+    body.className = "card-body"
+    body.appendChild(br);
+    body.appendChild(content);
+
+    var card = document.createElement("div");
+    card.className = "card bg-light";
+    card.style.width = "14rem";
+    card.style.height = "16rem";
+    card.appendChild(body);
+
+    card.appendChild(footer);
+
+    document.getElementById("deck").appendChild(card);
 }
 
 function czar_select(text)

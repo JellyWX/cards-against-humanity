@@ -52,9 +52,15 @@ def on_leave():
 
 @socketio.on('play')
 def play(data):
+
     player = Player.query.get(
         session['player']
     )
+    game = Game.query.get(player.game.id)
+
+    if game.stage == 'czar':
+        print('attempt to play during czar stage')
+        return
 
     current = player.hand.filter(Card.playing).first()
     if current is not None:
@@ -63,11 +69,11 @@ def play(data):
     player.ready = True
     player.hand[data].playing = True
 
-    room = rooms()[0]
+    db.session.commit()
+
     print('{} card has been played by {}'.format(player.hand[data], player.nickname))
 
-    emit('ready', (player.uuid, ), room=room)
-    game = Game.query.get(player.game.id)
+    emit('ready', (player.uuid, ), room=game.id)
 
     if all([player.ready for player in game.players if not player.czar]):
         game.stage = 'czar'
@@ -80,7 +86,7 @@ def play(data):
 
                 text += card.card.text + '\t'
 
-        emit('show_cards', (text, ), room=room)
+        emit('show_cards', (text, ), room=game.id)
 
     db.session.commit()
 
@@ -92,6 +98,8 @@ def czar_select(text):
     )
 
     if player.czar:
+        player.game.stage = 'selecting'
+
         for p in player.game.players.order_by(func.random()):
             if not p.uuid == player.uuid:
                 card_text = p.hand.filter(Card.playing).first().card.text
@@ -105,19 +113,33 @@ def czar_select(text):
         else:
             return
 
-        for p in player.game.players:
+        point_board = {}
+
+        for p in player.game.players.order_by(Player.id):
             p.hand.filter(Card.playing).delete(synchronize_session='fetch')
             p.czar = False
+
+            point_board[p.uuid] = p.points
 
             while p.hand.count() < 8:
                 c = Card(card=WhiteCards.query.order_by(func.random()).first(), hand=p)
                 db.session.add(c)
 
-        game.card = BlackCards.query.order_by(func.random()).first()
+        player.game.card = BlackCards.query.order_by(func.random()).first()
 
-        player.game.players.order_by(func.random()).first().czar = True
+        new_czar = player.game.players.order_by(func.random()).first()
+        new_czar.czar = True
 
-    db.session.commit()
+        db.session.commit()
+
+        for p in player.game.players:
+            p.ready = False
+            print(p.nickname)
+            cards = '\t'.join([x.card.text for x in p.hand.order_by(Card.id)])
+
+            emit('refresh', (cards, new_czar.uuid, player.game.card.text, point_board, ), room=p.sid)
+
+        db.session.commit()
 
 
 @app.route('/', methods=['GET', 'POST'])
