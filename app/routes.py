@@ -98,6 +98,8 @@ def czar_select(text):
     )
 
     if player.czar:
+        old_czar = player.id
+
         player.game.stage = 'selecting'
 
         for p in player.game.players.order_by(func.random()):
@@ -128,6 +130,10 @@ def czar_select(text):
         player.game.card = BlackCards.query.order_by(func.random()).first()
 
         new_czar = player.game.players.order_by(func.random()).first()
+
+        while new_czar.id == old_czar:
+            new_czar = player.game.players.order_by(func.random()).first()
+
         new_czar.czar = True
 
         db.session.commit()
