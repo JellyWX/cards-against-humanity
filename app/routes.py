@@ -119,7 +119,7 @@ def index():
         if password == '':
             password = None
 
-        g = Game(password=password)
+        g = Game(password=password, card=BlackCards.query.order_by(func.random()).first())
 
         db.session.add(g)
         db.session.commit()

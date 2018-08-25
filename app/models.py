@@ -7,6 +7,8 @@ class BlackCards(db.Model):
     id = db.Column(db.Integer, primary_key=True, unique=True)
     text = db.Column(db.Text)
 
+    games = db.relationship('Game', backref='card', lazy='dynamic')
+
 
 class WhiteCards(db.Model):
     __bind_key__ = None
@@ -60,3 +62,4 @@ class Game(db.Model):
     password = db.Column(db.Text, nullable=True)
 
     stage = db.Column(db.Text, nullable=False, default='waiting')
+    card_id = db.Column(db.Integer, db.ForeignKey('blackcards.id'))
