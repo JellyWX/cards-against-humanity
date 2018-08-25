@@ -30,6 +30,8 @@ class Card(db.Model):
 
     playing = db.Column(db.Boolean, nullable=False, default=False)
 
+    custom = db.Column(db.Boolean, nullable=False, default=False)
+
     def __repr__(self):
         return '<WhiteCard instance "{}">'.format(self.card.text)
 
@@ -63,3 +65,5 @@ class Game(db.Model):
 
     stage = db.Column(db.Text, nullable=False, default='waiting')
     card_id = db.Column(db.Integer, db.ForeignKey('blackcards.id'))
+
+    custom_chance = db.Column(db.Float)

@@ -182,11 +182,16 @@ def game():
 
         return redirect( url_for('index') )
 
+
+    if 'player' not in session:
+        return redirect( url_for('new_player', game=game.id) )
+
+
     player = Player.query.get(
         session.get('player')
     )
 
-    if player is None:
+    if player is None or player.game.id != game.id:
 
         return redirect( url_for('new_player', game=game.id) )
 
