@@ -151,7 +151,9 @@ sock.on('show_cards', (data) =>
 
 sock.on('round_win', (data) =>
 {
+    alert(data + " has won the round");
 
+    window.setTimeout(location.reload(true), 8000);
 });
 
 function add_player(nickname, uuid, czar, points)
@@ -227,7 +229,7 @@ function create_show_card(text, czar)
         var choose = document.createTextNode("Choose");
 
         var link = document.createElement("a");
-        link.href = "javascript:czar_select(" + text + ")";
+        link.href = "javascript:czar_select('" + text + "')";
         link.className = "card-link";
         link.appendChild(choose);
 
@@ -259,6 +261,11 @@ function create_show_card(text, czar)
     }
 
     document.getElementById("results").appendChild(card);
+}
+
+function czar_select(text)
+{
+    sock.emit('czar_select', text);
 }
 
         </script>

@@ -80,8 +80,6 @@ def play(data):
 
                 text += card.card.text + '\t'
 
-                card_q.delete(synchronize_session='fetch')
-
         emit('show_cards', (text, ), room=room)
 
     db.session.commit()
@@ -94,16 +92,30 @@ def czar_select(text):
     )
 
     if player.czar:
-        for p in game.players.order_by(func.random()):
+        for p in player.game.players.order_by(func.random()):
             if not p.uuid == player.uuid:
                 card_text = p.hand.filter(Card.playing).first().card.text
 
                 if card_text == text:
                     p.points += 1
                     emit('round_win', (p.uuid, ), room=player.game.id)
-                    p.game.stage = 'waiting'
 
                     break
+
+        else:
+            return
+
+        for p in player.game.players:
+            p.hand.filter(Card.playing).delete(synchronize_session='fetch')
+            p.czar = False
+
+            while p.hand.count() < 8:
+                c = Card(card=WhiteCards.query.order_by(func.random()).first(), hand=p)
+                db.session.add(c)
+
+        game.card = BlackCards.query.order_by(func.random()).first()
+
+        player.game.players.order_by(func.random()).first().czar = True
 
     db.session.commit()
 
