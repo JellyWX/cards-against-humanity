@@ -20,7 +20,7 @@
         <div class="container text-center d-flex justify-content-center">
             <div class="card bg-dark text-white" style="width: 18rem; height: 16rem;">
                 <div class="card-body">
-                    <h4 class="card-title">{{ game.card.text }}</h4>
+                    <h4 class="card-title">{{ game.card.text | safe }}</h4>
                 </div>
             </div>
         </div>
@@ -60,7 +60,7 @@
                         <br>
                         <h5 class="card-title" id="content_{{ index }}">{{ card.card.text | safe }}</h5>
                     </div>
-                    <div class="card-footer">
+                    <div class="card-footer play-button">
                         <a href="javascript:play({{ index }})" class="card-link" id="play_card_{{ index }}">
                             Play Card
                         </a>
@@ -116,7 +116,10 @@ sock.on('player_join', (nickname, uuid, czar) =>
 
             if (czar)
             {
-
+                for (var i = 0; i < 8; i++)
+                {
+                    document.getElementsByClassName("play-button")[i].style.opacity = 0
+                }
             }
         }
     }
@@ -173,7 +176,14 @@ function add_player(nickname, uuid, czar)
     var empty_badge = document.createTextNode(" ");
     icon.appendChild(empty_badge);
 
-    var text = document.createTextNode(nickname);
+    if (czar)
+    {
+        var text = document.createTextNode("(Czar)  " + nickname);
+    }
+    else
+    {
+        var text = document.createTextNode(nickname);
+    }
 
     item.appendChild(icon);
     item.appendChild(text);
