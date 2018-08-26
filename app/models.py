@@ -7,6 +7,8 @@ class BlackCards(db.Model):
     id = db.Column(db.Integer, primary_key=True, unique=True)
     text = db.Column(db.Text)
 
+    spaces = db.Column(db.Integer, nullable=False, default=1)
+
     games = db.relationship('Game', backref='card', lazy='dynamic')
 
 

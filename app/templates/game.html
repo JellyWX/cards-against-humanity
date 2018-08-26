@@ -125,6 +125,8 @@ sock.on('unready', function()
 
 sock.on('player_join', (nickname, uuid, czar, points) =>
 {
+    add_message("<strong>" + nickname + "</strong> has joined the game", "alert-success");
+
     if (!(uuid in players))
     {
         add_player(nickname, uuid, czar, points);

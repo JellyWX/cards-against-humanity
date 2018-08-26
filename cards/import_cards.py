@@ -13,6 +13,8 @@ class BlackCards(Base):
     id = Column(Integer, primary_key=True, unique=True)
     text = Column(Text)
 
+    spaces = Column(Integer, nullable=False, default=1)
+
 
 class WhiteCards(Base):
     __tablename__ = 'whitecards'
@@ -41,7 +43,7 @@ for white in whites:
     session.add(c)
 
 for black in blacks:
-    c = BlackCards(text=black)
+    c = BlackCards(text=black, spaces=black.count('_'))
 
     session.add(c)
 
