@@ -148,6 +148,15 @@ def czar_select(text):
         db.session.commit()
 
 
+@socketio.on('send_message')
+def send_message(text):
+    player = Player.query.get(
+        session['player']
+    )
+
+    emit('message', (player.uuid, text), room=player.game.id)
+
+
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def index():

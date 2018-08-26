@@ -93,37 +93,6 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
         <script>
 
-function send_message()
-{
-    tb = document.getElementById("message_box");
-
-    text = tb.value;
-
-    if (text == "")
-    {
-        return;
-    }
-    tb.value = "";
-
-    s = document.createElement("div");
-    s.className = "alert alert-dark";
-    s.innerHTML = text;
-
-    document.getElementById("inbox").appendChild(s);
-}
-
-var input = document.getElementById("message_box");
-
-input.addEventListener("keyup", function(event) {
-    event.preventDefault();
-
-    if (event.keyCode === 13)
-    {
-        document.getElementById("send_message").click();
-    }
-});
-
-
 var sock = io.connect("http://" + document.domain + ':' + location.port);
 sock.emit('join');
 
@@ -395,6 +364,44 @@ function czar_select(text)
 {
     sock.emit('czar_select', text);
 }
+
+
+
+function send_message()
+{
+    tb = document.getElementById("message_box");
+
+    text = tb.value;
+
+    if (text == "")
+    {
+        return;
+    }
+    tb.value = "";
+
+    sock.emit('send_message', text);
+}
+
+var input = document.getElementById("message_box");
+
+input.addEventListener("keyup", function(event) {
+    event.preventDefault();
+
+    if (event.keyCode === 13)
+    {
+        document.getElementById("send_message").click();
+    }
+});
+
+sock.on('message', (uuid, message) =>
+{
+    s = document.createElement("div");
+    s.className = "alert alert-dark";
+    s.innerHTML = "<strong>" + players[uuid] + "</strong>: " + message;
+
+    inbox = document.getElementById("inbox");
+    inbox.insertBefore(s, inbox.firstChild);
+});
 
         </script>
 
