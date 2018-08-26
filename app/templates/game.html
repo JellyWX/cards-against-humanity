@@ -110,7 +110,7 @@ sock.on('ready', (uuid) =>
 
     user_item.getElementsByTagName('span')[0].className = "badge badge-success badge-pill";
 
-    create_show_card("", false);
+    create_show_card("", false, 0, 1);
 });
 
 sock.on('unready', function()
@@ -162,12 +162,11 @@ sock.on('show_cards', (data) =>
         {
             single_cards = cards[i].split('\\');
 
-            console.log(single_cards)
-            create_show_card(single_cards[0], am_czar);
+            create_show_card(single_cards[0], am_czar, 0, single_cards.length);
 
             for (var j = 1; j < single_cards.length; j++)
             {
-                create_show_card(single_cards[j], false);
+                create_show_card(single_cards[j], false, j, single_cards.length);
             }
         }
     }
@@ -295,7 +294,7 @@ function play(index)
     }
 }
 
-function create_show_card(text, czar)
+function create_show_card(text, czar, index, total)
 {
     if (czar)
     {
@@ -323,7 +322,24 @@ function create_show_card(text, czar)
     body.appendChild(content);
 
     var card = document.createElement("div");
-    card.className = "card bg-light";
+
+    if (total == 1)
+    {
+        card.className = "card bg-light border-dark";
+    }
+    else if (index == 0)
+    {
+        card.className = "card bg-light border-dark border-right-0";
+    }
+    else if (index == (total - 1))
+    {
+        card.className = "card bg-light border-dark border-left-0";
+    }
+    else
+    {
+        card.className = "card bg-light border-dark border-top-0 border-bottom-0";
+    }
+
     card.style.width = "14rem";
     card.style.height = "16rem";
     card.appendChild(body);
