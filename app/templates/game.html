@@ -29,7 +29,7 @@
     <body>
 
         <div style="position: absolute; top: 0; left: 0;">
-            <div class="card border-dark" style="height: 32rem; opacity: 0.6; overflow-y: hidden;" id="collapse">
+            <div class="card border-dark" style="height: 32rem; opacity: 0.6; overflow-y: hidden; width: 16rem;" id="collapse">
 
                 <div class="card-header">
                     <div class="input-group mb-3">
@@ -55,14 +55,14 @@
         </div>
 
         <div class="container text-center d-flex justify-content-center">
-            <div class="card bg-dark text-white" style="width: 18rem; height: 16rem;">
+            <div class="card bg-dark text-white" style="width: 14rem; height: 16rem;">
                 <div class="card-body">
-                    <h4 class="card-title" id="blackcard">{{ game.card.text.replace('_', '______') | safe }}</h4>
+                    <h5 class="card-title" id="blackcard">{{ game.card.text.replace('_', '______') | safe }}</h5>
                 </div>
             </div>
         </div>
 
-        <ul class="list-group" style="position: absolute; top: 0; right: 0; width: 18rem;" id="players">
+        <ul class="list-group" style="position: absolute; top: 0; right: 0; width: 14rem;" id="players">
             <!--
                 <li class="list-group-item d-flex justify-content-between align-items-center" id="{{ player.uuid }}">
                     <span class="badge badge-warning badge-pill"> </span>
@@ -94,8 +94,22 @@
 
         <div class="row flex-row flex-nowrap justify-content-between fixed-bottom text-center" style="overflow-x: auto;" id="deck">
 
+            <!--
+            <div class="card flip-card bg-light" style="width: 12rem; height: 14rem; min-width: 12rem;">
+                <div class="card-body">
+                    <br>
+                    <h6 class="card-title" id="content_{{ index }}">The collective wail of every Magic player suddenly realizing that they've spent hundreds of dollars on pieces of cardboard.</h6>
+                </div>
+                <div class="card-footer play-button">
+                    <a href="javascript:play({{ index }})" class="card-link" id="play_card_{{ index }}">
+                        Play Card
+                    </a>
+                </div>
+            </div>
+            -->
+
             {% for card, index in player.hand | zip(range(player.hand.count())) %}
-                <div class="card flip-card bg-light" style="width: 14rem; height: 16rem; min-width: 14rem;">
+                <div class="card flip-card bg-light" style="width: 12rem; height: 14rem; min-width: 12rem;">
                     <div class="card-body">
                         <br>
                         <h5 class="card-title" id="content_{{ index }}">{{ card.card.text | safe }}</h5>
@@ -395,7 +409,7 @@ function create_hand_card(text, index)
     footer.className = "card-footer play-button";
     footer.appendChild(link);
 
-    var content = document.createElement("h5");
+    var content = document.createElement("h6");
     content.className = "card-title"
     content.innerHTML = text;
     content.id = "content_" + index
@@ -409,9 +423,9 @@ function create_hand_card(text, index)
 
     var card = document.createElement("div");
     card.className = "card card-block bg-light flip-card";
-    card.style.width = "14rem";
-    card.style.height = "16rem";
-    card.style.minWidth = "14rem";
+    card.style.width = "12rem";
+    card.style.height = "14rem";
+    card.style.minWidth = "12rem";
     card.appendChild(body);
 
     card.appendChild(footer);

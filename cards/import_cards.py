@@ -54,3 +54,6 @@ for black in blacks:
     session.add(c)
 
 session.commit()
+
+# longest card: The collective wail of every Magic player suddenly realizing that they've spent hundreds of dollars on pieces of cardboard.
+# longest card: Who blasphemes and bubbles at the center of all infinity, whose name no lips dare speak aloud, and who gnaws hungrily in inconceivable, unlighted chambers beyond time?
