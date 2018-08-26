@@ -30,30 +30,42 @@
     </head>
     <body>
 
-        <div style="position: absolute; top: 0; left: 0;">
-            <div class="card border-dark" style="height: 32rem; opacity: 0.6; overflow-y: hidden; width: 16rem;" id="collapse">
+        <div class="row" style="position: absolute; top: 0; left: 0;">
+            <div class="col" style="width: 16rem;">
+                <div class="card border-dark" style="height: 32rem; opacity: 0.6; overflow-y: hidden; width: 16rem;" id="collapse">
 
-                <div class="card-header">
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" id="message_box" placeholder="Type Something..." aria-label="Type Something..." aria-describedby="button-addon2">
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" onclick="send_message()" id="send_message">Send</button>
+                    <div class="card-header">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" id="message_box" placeholder="Type Something..." aria-label="Type Something..." aria-describedby="button-addon2">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" onclick="send_message()" id="send_message">Send</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="collapse">
+                        <div class="card-body" style="height: 30rem; max-height: 30rem; overflow-y: scroll;" id="inbox-body">
+                            <div class="d-flex flex-column align-bottom" id="inbox">
+
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div id="collapse">
-                    <div class="card-body" style="height: 30rem; max-height: 30rem; overflow-y: scroll;" id="inbox-body">
-                        <div class="d-flex flex-column align-bottom" id="inbox">
-
-                        </div>
-                    </div>
-                </div>
+                <a data-toggle="collapse" href="#collapse" aria-expanded="true" aria-controls="collapse">
+                    Toggle Chat
+                </a>
             </div>
-
-            <a data-toggle="collapse" href="#collapse" aria-expanded="true" aria-controls="collapse">
-                Toggle Chat
-            </a>
+            <div class="col" style="width: 16rem;">
+                <ul class="list-group" id="players">
+                    <!--
+                        <li class="list-group-item d-flex justify-content-between align-items-center" id="{{ player.uuid }}">
+                            <span class="badge badge-warning badge-pill"> </span>
+                            {{ player.nickname }}
+                        </li>
+                    -->
+                </ul>
+            </div>
         </div>
 
         <div class="container text-center d-flex justify-content-center">
@@ -63,16 +75,6 @@
                 </div>
             </div>
         </div>
-
-        <ul class="list-group" style="position: absolute; top: 0; right: 0; width: 14rem;" id="players">
-            <!--
-                <li class="list-group-item d-flex justify-content-between align-items-center" id="{{ player.uuid }}">
-                    <span class="badge badge-warning badge-pill"> </span>
-                    {{ player.nickname }}
-                </li>
-            -->
-        </ul>
-        <br>
 
         <div class="d-flex justify-content-center text-center" style="overflow-x: auto;" id="results">
 
