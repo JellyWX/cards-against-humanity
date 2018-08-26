@@ -164,6 +164,7 @@ sock.on('show_cards', (data) =>
 sock.on('round_win', (data) =>
 {
     console.log(players[data] + " has won the round");
+    add_message("<strong>" + players[data] + "</strong> has won the round", "alert-warning")
 });
 
 sock.on('refresh', (cards, new_czar, new_black, points) =>
@@ -382,6 +383,16 @@ function send_message()
     sock.emit('send_message', text);
 }
 
+function add_message(text, style)
+{
+    s = document.createElement("div");
+    s.className = "alert " + style;
+    s.innerHTML = text;
+
+    inbox = document.getElementById("inbox");
+    inbox.insertBefore(s, inbox.firstChild);
+}
+
 var input = document.getElementById("message_box");
 
 input.addEventListener("keyup", function(event) {
@@ -395,12 +406,7 @@ input.addEventListener("keyup", function(event) {
 
 sock.on('message', (uuid, message) =>
 {
-    s = document.createElement("div");
-    s.className = "alert alert-dark";
-    s.innerHTML = "<strong>" + players[uuid] + "</strong>: " + message;
-
-    inbox = document.getElementById("inbox");
-    inbox.insertBefore(s, inbox.firstChild);
+    add_message("<strong>" + players[uuid] + "</strong>: " + message, "alert-dark")
 });
 
         </script>
