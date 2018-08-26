@@ -38,11 +38,15 @@ def on_join():
     db.session.commit()
 
 
-@socketio.on('leave')
+@socketio.on('disconnect')
 def on_leave():
     player = Player.query.get(
         session['player']
     )
+
+    print(player.nickname + ' disconnected')
+
+    Player.query.filter(Player.id == session['player']).delete(synchronize_session='fetch')
 
     uuid = player.uuid
     game = player.game.id

@@ -147,6 +147,14 @@ sock.on('player_join', (nickname, uuid, czar, points) =>
     }
 });
 
+sock.on('player_leave', (uuid) =>
+{
+    add_message("<strong>" + players[uuid] + "</strong> has left the game", "alert-danger");
+
+    player = document.getElementById(uuid);
+    player.parentNode.removeChild(player);
+});
+
 sock.on('show_cards', (data) =>
 {
     console.log("received show_cards event");
