@@ -154,11 +154,21 @@ sock.on('show_cards', (data) =>
     drop("results");
 
     cards = data.split("\t")
+
+    console.log(cards)
     for (var i = 0; i < cards.length; i++)
     {
         if (cards[i] != "")
         {
-            create_show_card(cards[i], am_czar)
+            single_cards = cards[i].split('\\');
+
+            console.log(single_cards)
+            create_show_card(single_cards[0], am_czar);
+
+            for (var j = 1; j < single_cards.length; j++)
+            {
+                create_show_card(single_cards[j], false);
+            }
         }
     }
 });

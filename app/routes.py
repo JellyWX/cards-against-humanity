@@ -62,12 +62,16 @@ def play(data):
         print('attempt to play during czar stage')
         return
 
-    current = player.hand.filter(Card.playing).first()
-    if current is not None:
-        current.playing = False
+    current = player.hand.filter(Card.playing)
+    while current.count() > game.card.spaces:
+        current.first().playing = False
 
-    player.ready = True
     player.hand[data].playing = True
+
+    if current.count() == game.card.spaces:
+        player.ready = True
+    else:
+        player.ready = False
 
     db.session.commit()
 
@@ -82,9 +86,12 @@ def play(data):
         for p in game.players.order_by(func.random()):
             if not p.czar:
                 card_q = p.hand.filter(Card.playing)
-                card = card_q.first()
 
-                text += card.card.text + '\t'
+                new = '\\'.join([c.card.text for c in card_q])
+
+                text += new + '\t'
+
+        print(text)
 
         emit('show_cards', (text, ), room=game.id)
 

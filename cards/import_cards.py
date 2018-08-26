@@ -43,7 +43,13 @@ for white in whites:
     session.add(c)
 
 for black in blacks:
-    c = BlackCards(text=black, spaces=black.count('_'))
+    spaces = 1
+    if black.count('_') < spaces:
+        spaces = 1
+    else:
+        spaces = black.count('_')
+
+    c = BlackCards(text=black, spaces=spaces)
 
     session.add(c)
 
