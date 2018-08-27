@@ -1,32 +1,44 @@
-<html>
-
-    <head>
-
-        <title>Create Account</title>
-
-    </head>
+{% extends "base.html" %}
+{% block content %}
     <body>
 
-        {% for error in errors %}
+        <div style="margin-top: 20vh; margin-left: 41vw">
 
-            <p>{{ error }}</p>
+            <div class="col-12 card" style="max-width: 18vw;">
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="form-group">
+                            <label for="nickname">Nickname</label>
+                            {% if errors == 'nickname' %}
+                                <input name="nickname" type="text" class="form-control is-invalid" id="nickname" placeholder="Nickname">
+                            {% else %}
+                                <input name="nickname" type="text" class="form-control" id="nickname" placeholder="Nickname">
+                            {% endif %}
+                            <div class="invalid-feedback">
+                                Please choose a nickname.
+                            </div>
+                        </div>
+                        {% if password %}
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                {% if errors == 'password' %}
+                                    <input name="password" type="password" class="form-control is-invalid" id="password" placeholder="Password">
+                                {% else %}
+                                    <input name="password" type="password" class="form-control" id="password" placeholder="Password">
+                                {% endif %}
 
-        {% endfor %}
+                                <div class="invalid-feedback">
+                                    Password incorrect.
+                                </div>
+                            </div>
+                        {% endif %}
+                        <button type="submit" class="btn btn-primary">Create Game</button>
+                    </form>
+                </div>
+            </div>
 
-        <form method="post">
-
-            <p>Please enter a nickname</p>
-            <input type="text" name="nickname"></input>
-
-            {% if password %}
-            <p>Please enter the game password</p>
-            <input type="password" name="password"></input>
-            {% endif %}
-
-            <input type="submit" value="Go!"></input>
-
-        </form>
+        </div>
 
     </body>
 
-</html>
+{% endblock %}

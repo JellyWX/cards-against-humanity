@@ -177,17 +177,28 @@ def index():
 
     if request.method == 'POST':
 
+        nickname = request.form.get('nickname')
         password = request.form.get('password')
 
         if password == '':
             password = None
+
+        if nickname == '':
+
+            return render_template('index.html', errors=True)
 
         g = Game(password=password, card=BlackCards.query.order_by(func.random()).first())
 
         db.session.add(g)
         db.session.commit()
 
-        return redirect( url_for('new_player', game=g.id) )
+        p = Player(nickname=nickname, game=g, uuid=uuid.uuid4().hex)
+
+        db.session.add(p)
+        db.session.commit()
+
+
+        return redirect( url_for('game', id=g.id) )
 
     elif request.method == 'GET':
 
@@ -245,12 +256,12 @@ def new_player():
 
         if request.form.get('nickname') == '':
 
-            return render_template('new_player.html', errors=['You must enter a nickname'], password=game.password is not None)
+            return render_template('new_player.html', errors='nickname', password=game.password is not None)
 
         if game.password is not None:
             if request.form.get('password') != game.password:
 
-                return render_template('new_player.html', errors=['Password is incorrect'], password=True)
+                return render_template('new_player.html', errors='password', password=True)
 
         p = Player(nickname=request.form.get('nickname'), game=game, uuid=uuid.uuid4().hex)
 

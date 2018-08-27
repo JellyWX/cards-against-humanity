@@ -1,20 +1,34 @@
-<html>
-
-    <head>
-
-        <title>Create A Game</title>
-
-    </head>
+{% extends "base.html" %}
+{% block content %}
     <body>
 
-        <form method="post">
+        <div style="margin-top: 20vh; margin-left: 41vw">
 
-            <p>Enter a password (optional):</p>
-            <input type="password" name="password"></input>
+            <div class="col-12 card" style="max-width: 18vw;">
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="form-group">
+                            <label for="nickname">Nickname</label>
+                            {% if errors %}
+                                <input name="nickname" type="text" class="form-control is-invalid" id="nickname" placeholder="Nickname">
+                            {% else %}
+                                <input name="nickname" type="text" class="form-control" id="nickname" placeholder="Nickname">
+                            {% endif %}
+                            <div class="invalid-feedback">
+                                Please choose a nickname.
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input name="password" type="password" class="form-control" id="password" placeholder="Password">
+                            <small class="form-text text-muted">Optional</small>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Create Game</button>
+                    </form>
+                </div>
+            </div>
 
-            <input type="submit">Create Game</input>
-        </form>
+        </div>
 
     </body>
-
-</html>
+{% endblock %}
