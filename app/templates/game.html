@@ -18,7 +18,7 @@
                         </div>
                     </div>
 
-                    <div class="card-body" style="height: 30rem; max-height: 30rem; overflow-y: scroll;" id="inbox-body">
+                    <div class="card-body" style="height: 100vh; max-height: 100vh; overflow-y: scroll;" id="inbox-body">
                         <div class="d-flex flex-column align-bottom" id="inbox">
 
                         </div>
@@ -74,7 +74,7 @@
                         <div class="d-flex justify-content-start text-center" style="overflow-x: auto; overflow-y: hidden;" id="deck">
 
                             {% for card, index in player.hand | zip(range(player.hand.count())) %}
-                                <div class="card bg-light" style="height: 14rem; width: 12rem; min-width: 12rem;">
+                                <div class="card bg-light" style="height: 15rem; width: 12rem; min-width: 12rem;">
                                     <div class="card-body">
                                         <h5 class="card-title" id="content_{{ index }}">{{ card.card.text | safe }}</h5>
                                     </div>

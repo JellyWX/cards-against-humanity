@@ -257,7 +257,7 @@ function create_show_card(text, czar, index, total)
 
     card.style.width = "12rem";
     card.style.minWidth = "12rem";
-    card.style.height = "14rem";
+    card.style.height = "15rem";
     card.appendChild(body);
 
     if (czar)
@@ -297,7 +297,7 @@ function create_hand_card(text, index)
     var card = document.createElement("div");
     card.className = "card bg-light";
     card.style.width = "12rem"
-    card.style.height = "14rem";
+    card.style.height = "15rem";
     card.style.minWidth = "12rem";
     card.appendChild(body);
 
