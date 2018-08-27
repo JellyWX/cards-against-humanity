@@ -30,6 +30,8 @@
     </head>
     <body style="overflow-x: hidden;">
 
+        <noscript><h1>You must have JavaScript enabled to play this game</h1></noscript>
+
         <div class="row">
             <div class="col-lg-2 col-md-3 d-none d-md-block">
                 <div class="card border-dark" style="height: 100vh; opacity: 0.6; overflow-y: hidden;" id="collapse">
@@ -67,7 +69,7 @@
                     <br>
                     <div class="row row-flex justify-content-center" style="width: 100%;">
                         <div class="text-center d-flex justify-content-center" style="width: 24rem;">
-                            <p class="lead" id="blackcard"><strong>{{ game.card.text.replace('_', '______') | safe }}</strong></p>
+                            <h2 id="blackcard"><strong>{{ game.card.text.replace('_', '______') | safe }}</strong></h2>
                         </div>
 
                     </div>
@@ -76,6 +78,7 @@
 
                         <div class="d-flex justify-content-start text-center" style="overflow-x: auto; overflow-y: hidden;" id="results">
 
+                        <!--
                             {% for x in range(16) %}
                             <div class="card bg-light" style="min-width: 12rem; width: 12rem; height: 14rem;">
                                 <div class="card-body">
@@ -89,6 +92,7 @@
                                 </div>
                             </div>
                             {% endfor %}
+                        -->
                         </div>
 
                     </div>
@@ -99,7 +103,6 @@
                             {% for card, index in player.hand | zip(range(player.hand.count())) %}
                                 <div class="card bg-light" style="height: 14rem; width: 12rem; min-width: 12rem;">
                                     <div class="card-body">
-                                        <br>
                                         <h5 class="card-title" id="content_{{ index }}">{{ card.card.text | safe }}</h5>
                                     </div>
                                     <div class="card-footer play-button">
