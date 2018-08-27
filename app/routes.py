@@ -197,6 +197,7 @@ def index():
         db.session.add(p)
         db.session.commit()
 
+        session['player'] = p.id
 
         return redirect( url_for('game', id=g.id) )
 
