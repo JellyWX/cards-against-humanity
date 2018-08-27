@@ -8,6 +8,7 @@ var uuid_self = document.currentScript.getAttribute('uuid');
 var am_czar = false;
 
 var players = {}
+var ready = {}
 
 
 sock.on('ready', (uuid) =>
@@ -15,9 +16,15 @@ sock.on('ready', (uuid) =>
     console.log("player " + uuid + " has readied up");
     var user_item = document.getElementById(uuid);
 
-    user_item.getElementsByTagName('span')[0].className = "badge badge-success badge-pill";
+    if (!(uuid in ready))
+    {
+        user_item.getElementsByTagName('span')[0].className = "badge badge-success badge-pill";
 
-    create_show_card("", false, 0, 1);
+        create_show_card("", false, 0, 1);
+
+        ready[uuid] = true
+    }
+
 });
 
 sock.on('unready', function()
@@ -124,6 +131,8 @@ sock.on('refresh', (cards, new_czar, new_black, points) =>
     }
 
     document.getElementById("blackcard").innerHTML = new_black.replace('_', '______');
+
+    ready = {};
 });
 
 function add_player(nickname, uuid, czar, points)
