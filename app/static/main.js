@@ -282,7 +282,7 @@ function create_hand_card(text, index)
     footer.className = "card-footer play-button";
     footer.appendChild(link);
 
-    var content = document.createElement("h6");
+    var content = document.createElement("h5");
     content.className = "card-title"
     content.innerHTML = text;
     content.id = "content_" + index
@@ -295,9 +295,9 @@ function create_hand_card(text, index)
     body.appendChild(content);
 
     var card = document.createElement("div");
-    card.className = "card card-block bg-light flip-card";
-    card.style.width = "12rem";
-    card.style.height = "14rem";
+    card.className = "card bg-light";
+    card.style.width = "100%"
+    card.style.height = "12rem";
     card.style.minWidth = "12rem";
     card.appendChild(body);
 

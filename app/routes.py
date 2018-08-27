@@ -44,6 +44,9 @@ def on_leave():
         session['player']
     )
 
+    if player is None:
+        return
+
     print(player.nickname + ' disconnected')
 
     Player.query.filter(Player.id == session['player']).delete(synchronize_session='fetch')

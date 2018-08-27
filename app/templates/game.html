@@ -28,7 +28,7 @@
         <title>Flasks Against Humanity</title>
 
     </head>
-    <body>
+    <body style="overflow: hidden;">
 
         <div class="row">
             <div class="col col-2">
@@ -93,24 +93,10 @@
             </div>
             <div class="col col-2">
 
-                <div class="text-center" style="overflow-y: auto;" id="deck">
-
-                    <!--
-                    <div class="card flip-card bg-light" style="width: 12rem; height: 14rem; min-width: 12rem;">
-                        <div class="card-body">
-                            <br>
-                            <h6 class="card-title" id="content_{{ index }}">The collective wail of every Magic player suddenly realizing that they've spent hundreds of dollars on pieces of cardboard.</h6>
-                        </div>
-                        <div class="card-footer play-button">
-                            <a href="javascript:play({{ index }})" class="card-link" id="play_card_{{ index }}">
-                                Play Card
-                            </a>
-                        </div>
-                    </div>
-                    -->
+                <div class="text-center" style="overflow-y: auto; max-height: 100vh;" id="deck">
 
                     {% for card, index in player.hand | zip(range(player.hand.count())) %}
-                        <div class="card flip-card bg-light" style="height: 12rem; min-width: 12rem;">
+                        <div class="card bg-light" style="height: 12rem; min-width: 12rem;">
                             <div class="card-body">
                                 <br>
                                 <h5 class="card-title" id="content_{{ index }}">{{ card.card.text | safe }}</h5>
