@@ -31,7 +31,7 @@
     <body style="overflow: hidden;">
 
         <div class="row">
-            <div class="col col-2">
+            <div class="col col-lg-2 col-mb-2 hidden-sm hidden-xs">
                 <div class="card border-dark" style="height: 100vh; opacity: 0.6; overflow-y: hidden;" id="collapse">
 
                     <div class="card-header">
@@ -51,7 +51,7 @@
                 </div>
 
             </div>
-            <div class="col col-2">
+            <div class="col col-lg-2 col-mb-2 col-sm-4">
                 <ul class="list-group" id="players">
                     <!--
                         <li class="list-group-item d-flex justify-content-between align-items-center" id="{{ player.uuid }}">
@@ -61,23 +61,23 @@
                     -->
                 </ul>
             </div>
-            <div class="col col-6">
+            <div class="col col-8">
 
-                <div class="container">
-                    <br><br>
-                    <div class="row justify-content-center">
+                <div class="container" style="height: 100vh; display: flex; align-items: center; flex-wrap: wrap;">
+                    <br>
+                    <div class="row row-flex justify-content-center">
                         <div class="text-center d-flex justify-content-center" style="width: 24rem;">
-                            <h2 class="card-title" id="blackcard"><strong>{{ game.card.text.replace('_', '______') | safe }}</strong></h2>
+                            <p class="lead" id="blackcard"><strong>{{ game.card.text.replace('_', '______') | safe }}</strong></p>
                         </div>
 
                     </div>
-                    <br><br><br><br><br><br>
-                    <div class="row">
+                    <br><br><br><br>
+                    <div class="row" style="width: 100%;">
 
-                        <div class="d-flex justify-content-start text-center" style="overflow-x: auto;" id="results">
+                        <div class="d-flex justify-content-start text-center" style="overflow-x: auto; overflow-y: hidden;" id="results">
 
                             {% for x in range(16) %}
-                            <div class="card bg-light" style="min-width: 14rem; width: 16rem; height: 18rem;">
+                            <div class="card bg-light" style="min-width: 12rem; width: 12rem; height: 14rem;">
                                 <div class="card-body">
                                     <br>
                                     <h5 class="card-title">Test</h5>
@@ -92,28 +92,29 @@
                         </div>
 
                     </div>
+
+                    <div class="row" style="width: 100%;">
+                        <div class="d-flex justify-content-start text-center" style="overflow-x: auto;" id="deck">
+
+                            {% for card, index in player.hand | zip(range(player.hand.count())) %}
+                                <div class="card bg-light" style="height: 14rem; width: 12rem; min-width: 12rem;">
+                                    <div class="card-body">
+                                        <br>
+                                        <h5 class="card-title" id="content_{{ index }}">{{ card.card.text | safe }}</h5>
+                                    </div>
+                                    <div class="card-footer play-button">
+                                        <a href="javascript:play({{ index }})" class="card-link" id="play_card_{{ index }}">
+                                            Play Card
+                                        </a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+                        </div> <!-- end of card-deck -->
+
+                    </div>
+
                 </div>
-
-            </div>
-            <div class="col col-2">
-
-                <div class="text-center" style="overflow-y: auto; max-height: 100vh;" id="deck">
-
-                    {% for card, index in player.hand | zip(range(player.hand.count())) %}
-                        <div class="card bg-light" style="height: 12rem; min-width: 12rem;">
-                            <div class="card-body">
-                                <br>
-                                <h5 class="card-title" id="content_{{ index }}">{{ card.card.text | safe }}</h5>
-                            </div>
-                            <div class="card-footer play-button">
-                                <a href="javascript:play({{ index }})" class="card-link" id="play_card_{{ index }}">
-                                    Play Card
-                                </a>
-                            </div>
-                        </div>
-                    {% endfor %}
-
-                </div> <!-- end of card-deck -->
 
             </div>
         </div>

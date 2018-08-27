@@ -255,9 +255,9 @@ function create_show_card(text, czar, index, total)
         card.className = "card flip-card bg-light border-dark border-top-0 border-bottom-0";
     }
 
-    card.style.width = "14rem";
-    card.style.minWidth = "14rem";
-    card.style.height = "16rem";
+    card.style.width = "12rem";
+    card.style.minWidth = "12rem";
+    card.style.height = "14rem";
     card.appendChild(body);
 
     if (czar)
@@ -296,8 +296,8 @@ function create_hand_card(text, index)
 
     var card = document.createElement("div");
     card.className = "card bg-light";
-    card.style.width = "100%"
-    card.style.height = "12rem";
+    card.style.width = "12rem"
+    card.style.height = "14rem";
     card.style.minWidth = "12rem";
     card.appendChild(body);
 
