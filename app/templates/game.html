@@ -63,31 +63,35 @@
             </div>
             <div class="col col-6">
 
-                <div class="container text-center d-flex justify-content-center">
-                    <div class="card bg-dark text-white" style="width: 14rem; height: 16rem;">
-                        <div class="card-body">
-                            <h5 class="card-title" id="blackcard">{{ game.card.text.replace('_', '______') | safe }}</h5>
+                <div class="container">
+                    <br><br>
+                    <div class="row justify-content-center">
+                        <div class="text-center d-flex justify-content-center" style="width: 24rem;">
+                            <h2 class="card-title" id="blackcard"><strong>{{ game.card.text.replace('_', '______') | safe }}</strong></h2>
                         </div>
-                    </div>
-                </div>
 
-                <div class="d-flex justify-content-center text-center" style="overflow-x: auto;" id="results">
-
-                    <!---
-                    {% for x in range(16) %}
-                    <div class="card bg-light" style="min-width: 14rem; width: 14rem; height: 16rem;">
-                        <div class="card-body">
-                            <br>
-                            <h5 class="card-title">Test</h5>
-                        </div>
-                        <div class="card-footer">
-                            <a href="#" class="card-link">
-                                Choose
-                            </a>
-                        </div>
                     </div>
-                    {% endfor %}
-                    -->
+                    <br><br><br><br><br><br>
+                    <div class="row">
+
+                        <div class="d-flex justify-content-start text-center" style="overflow-x: auto;" id="results">
+
+                            {% for x in range(16) %}
+                            <div class="card bg-light" style="min-width: 14rem; width: 16rem; height: 18rem;">
+                                <div class="card-body">
+                                    <br>
+                                    <h5 class="card-title">Test</h5>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="#" class="card-link">
+                                        Choose
+                                    </a>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                    </div>
                 </div>
 
             </div>
