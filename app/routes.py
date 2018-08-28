@@ -58,7 +58,7 @@ def on_leave():
     emit('player_leave', (uuid, ), room=game)
 
     if player.game.players.count() == 0:
-        Game.query.filter(Game.id == game.id).delete(synchronize_session='fetch')
+        Game.query.filter(Game.id == player.game.id).delete(synchronize_session='fetch')
 
 
 @socketio.on('play')
@@ -190,7 +190,9 @@ def index():
 
         if nickname == '':
 
-            return render_template('index.html', errors=True)
+            background = random.choice(['1', '2', '3'])
+
+            return render_template('index.html', background=url_for('static', filename='backgrounds/{}.jpg'.format(background)), errors=True)
 
         g = Game(password=password, card=BlackCards.query.order_by(func.random()).first())
 
@@ -264,12 +266,16 @@ def new_player():
 
         if request.form.get('nickname') == '':
 
-            return render_template('new_player.html', errors='nickname', password=game.password is not None)
+            background = random.choice(['1', '2', '3'])
+
+            return render_template('new_player.html', background=url_for('static', filename='backgrounds/{}.jpg'.format(background)), errors='nickname', password=game.password is not None)
 
         if game.password is not None:
             if request.form.get('password') != game.password:
 
-                return render_template('new_player.html', errors='password', password=True)
+                background = random.choice(['1', '2', '3'])
+
+                return render_template('new_player.html', background=url_for('static', filename='backgrounds/{}.jpg'.format(background)), errors='password', password=True)
 
         p = Player(nickname=request.form.get('nickname'), game=game, uuid=uuid.uuid4().hex)
 
@@ -282,4 +288,6 @@ def new_player():
 
     elif request.method == 'GET':
 
-        return render_template('new_player.html', errors=[], password=game.password is not None)
+        background = random.choice(['1', '2', '3'])
+
+        return render_template('new_player.html', background=url_for('static', filename='backgrounds/{}.jpg'.format(background)), errors=[], password=game.password is not None)
