@@ -347,6 +347,18 @@ function add_message(text, style)
     inbox.insertBefore(s, inbox.firstChild);
 }
 
+function copy_link()
+{
+    const el = document.createElement('textarea');
+    el.value = window.location.href;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+}
+
+document.querySelector("#copy").addEventListener("click", copy_link);
+
 var input = document.getElementById("message_box");
 
 input.addEventListener("keyup", function(event) {

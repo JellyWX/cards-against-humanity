@@ -97,6 +97,12 @@
             </div>
         </div>
 
+        <div style="position: absolute; top: 0; right: 0;">
+            <a href="{{ url_for('index') }}">Leave Game</a>
+            <br>
+            <a href="javascript:copy_link()" id="copy">Copy Join Link</a>
+        </div>
+
 
         <script src="{{ url_for('static', filename='main.js') }}" uuid="{{ player.uuid }}" game="{{ game.id }}"></script>
 
