@@ -5,8 +5,8 @@
 
         <noscript><h1>You must have JavaScript enabled to play this game</h1></noscript>
 
-        <div class="row">
-            <div class="col-lg-2 col-md-3 d-none d-md-block">
+        <div class="row nopadding" style="width: 100vw;">
+            <div class="col-lg-2 col-md-3 d-none d-md-block nopadding">
                 <div class="card border-dark" style="height: 100vh; opacity: 0.6; overflow-y: hidden;" id="collapse">
 
                     <div class="card-header">
@@ -26,19 +26,21 @@
                 </div>
 
             </div>
-            <div class="col-lg-2 col-md-2">
-                <ul class="list-group" id="players">
-                    <!--
-                        <li class="list-group-item d-flex justify-content-between align-items-center" id="{{ player.uuid }}">
-                            <span class="badge badge-warning badge-pill"> </span>
-                            {{ player.nickname }}
-                        </li>
-                    -->
-                </ul>
-            </div>
-            <div class="col col-lg-8 col-md-7 col-sm-12 col-xs-12">
 
-                <div class="container" style="height: 100vh; display: flex; align-items: center; flex-wrap: wrap;">
+            <div class="col col-lg-10 col-md-9 col-sm-12 col-xs-12 nopadding">
+
+                <div class="col-lg-2 col-md-2 nopadding" style="position: absolute;">
+                    <ul class="list-group" id="players">
+                        <!--
+                            <li class="list-group-item d-flex justify-content-between align-items-center" id="{{ player.uuid }}">
+                                <span class="badge badge-warning badge-pill"> </span>
+                                {{ player.nickname }}
+                            </li>
+                        -->
+                    </ul>
+                </div>
+
+                <div class="container-fluid" style="height: 100vh; display: flex; align-items: center; flex-wrap: wrap;">
                     <br>
                     <div class="row row-flex justify-content-center" style="width: 100%;">
                         <div class="text-center d-flex justify-content-center" style="width: 24rem;">
@@ -70,8 +72,8 @@
 
                     </div>
 
-                    <div class="row" style="width: 100%;">
-                        <div class="d-flex justify-content-start text-center" style="overflow-x: auto; overflow-y: hidden;" id="deck">
+                    <div class="row nopadding" style="width: 100%;">
+                        <div class="d-flex justify-content-start text-center nopadding" style="overflow-x: auto; overflow-y: hidden;" id="deck">
 
                             {% for card, index in player.hand | zip(range(player.hand.count())) %}
                                 <div class="card bg-light" style="height: 15rem; width: 12rem; min-width: 12rem;">
