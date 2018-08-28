@@ -6,6 +6,7 @@ import time
 import json
 from  sqlalchemy.sql.expression import func
 import uuid
+import random
 
 
 @socketio.on('join')
@@ -55,6 +56,9 @@ def on_leave():
     game = player.game.id
     leave_room(game)
     emit('player_leave', (uuid, ), room=game)
+
+    if player.game.players.count() == 0:
+        Game.query.filter(Game.id == game.id).delete(synchronize_session='fetch')
 
 
 @socketio.on('play')
@@ -171,6 +175,7 @@ def send_message(text):
     emit('message', (player.uuid, text), room=player.game.id)
 
 
+
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def index():
@@ -203,7 +208,9 @@ def index():
 
     elif request.method == 'GET':
 
-        return render_template('index.html')
+        background = random.choice(['1', '2', '3'])
+
+        return render_template('index.html', background=url_for('static', filename='backgrounds/{}.jpg'.format(background)))
 
 
 @app.route('/game')

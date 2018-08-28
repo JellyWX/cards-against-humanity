@@ -1,11 +1,28 @@
 {% extends "base.html" %}
 {% block content %}
     <body>
+        <div style="
+            overflow: hidden;
+            width: 100%;
+            height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 0;">
+            <img style="
+            height: 100vh;
+            object-fit: contain;
+            overflow: hidden;
+            " src="{{ background }}">
+        </div>
 
-        <div style="margin-top: 20vh; margin-left: 41vw">
+        <div class="row" style="width: 100%; height: 100%; display: flex; align-items: center;">
+            <div class="col-lg-5 col-md-4 col-sm-2">
 
-            <div class="col-12 card" style="max-width: 18vw;">
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-8 col-xs-12 card">
                 <div class="card-body">
+                    <h3 class="card-title">Create Game</h3>
+                    <br>
                     <form method="POST">
                         <div class="form-group">
                             <label for="nickname">Nickname</label>
