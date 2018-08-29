@@ -218,6 +218,11 @@ def index():
 @app.route('/game')
 def game():
 
+    if 'id' not in request.args.keys():
+
+        return redirect( url_for('index') )
+
+
     game = Game.query.get(
         request.args.get('id')
     )
