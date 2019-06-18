@@ -1,5 +1,5 @@
 
-var sock = io.connect(location.protocol "//" + document.domain + ':' + location.port);
+var sock = io.connect(location.protocol + "//" + document.domain + ':' + location.port);
 sock.emit('join');
 
 var game_id = document.currentScript.getAttribute('game');
