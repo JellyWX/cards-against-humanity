@@ -130,7 +130,7 @@ sock.on('refresh', (cards, new_czar, new_black, points) =>
         }
     }
 
-    document.getElementById("blackcard").innerHTML = new_black.replace('_', '______');
+    document.getElementById("blackcard").innerHTML = new_black.split('_').join('______');
 
     ready = {};
 });
