@@ -77,7 +77,7 @@
 
                             {% for card, index in player.hand | zip(range(player.hand.count())) %}
                                 <div class="card bg-light" style="height: 15rem; width: 12rem; min-width: 12rem;">
-                                    <div class="card-body">
+                                    <div class="card-body" style="overflow-y: auto;">
                                         <h5 class="card-title" id="content_{{ index }}">{{ card.card.text | safe }}</h5>
                                     </div>
                                     <div class="card-footer play-button">

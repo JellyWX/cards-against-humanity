@@ -242,6 +242,7 @@ function create_show_card(text, czar, index, total)
 
     var body = document.createElement("div");
     body.className = "card-body"
+    body.style.overflowY = "auto"
     body.appendChild(br);
     body.appendChild(content);
 
@@ -300,6 +301,7 @@ function create_hand_card(text, index)
 
     var body = document.createElement("div");
     body.className = "card-body"
+    body.style.overflow = "scroll"
     body.appendChild(br);
     body.appendChild(content);
 
